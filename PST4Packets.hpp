@@ -88,6 +88,18 @@ namespace PST4
 		float w;
 	};
 
+	static std::ostream& operator<<(std::ostream& stream, const Vect3f& vector)
+	{
+		stream << "Vect3f(" << vector.x << ", " << vector.y << ", " << vector.z << ")";
+		return stream;
+	}
+
+	static std::ostream& operator<<(std::ostream& stream, const Quatf& quat)
+	{
+		stream << "Quatf(" << quat.w << ", " << quat.w << ", " << quat.y << ", " << quat.x << ")";
+		return stream;
+	}
+
 	struct headPosePacket
 	{
 		headPosePacket() : type{ ID_PST4_MESSAGE_HEAD_POSE } {};
@@ -103,14 +115,14 @@ namespace PST4
 			absOrient.y = orientation.y;
 			absOrient.z = orientation.z;
 			absOrient.w = orientation.w;
-		}
+	}
 #endif
 
 		unsigned char type;
 		size_t sessionId;
 		Vect3f absPos;
 		Quatf absOrient;
-	};
+};
 
 #pragma pack(pop)
 }
