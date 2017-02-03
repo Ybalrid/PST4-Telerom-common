@@ -1,4 +1,5 @@
 #include <MessageIdentifiers.h>
+#include "linx_safe.h"
 
 namespace PST4
 {
