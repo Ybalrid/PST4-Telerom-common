@@ -2,6 +2,13 @@
 
 namespace PST4
 {
+	static bool secure_strcpy(char* dest, rsize_t len, const char* src)
+	{
+		auto result = strcpy_s(dest, len, src);
+		if (result != 0) return false;
+		return true;
+	}
+
 	/*Structure of any RakNet packet :
 
 	----------------------------------
@@ -30,7 +37,8 @@ namespace PST4
 			type{ ID_PST4_MESSAGE_ECHO }
 		{
 			if (str.length() < 255)
-				strcpy_s(message, sizeof message, str.c_str());
+				if (!secure_strcpy(message, sizeof message, str.c_str()))
+					throw std::runtime_error("Error while copying string into echo packet.");
 		}
 
 		//The order here is EXTRA IMPORTANT!
