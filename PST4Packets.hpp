@@ -26,6 +26,8 @@ namespace PST4
 		ID_PST4_MESSAGE_HEAD_POSE = ID_USER_PACKET_ENUM + 2,
 		ID_PST4_MESSAGE_HAND_POSE = ID_USER_PACKET_ENUM + 3,
 		ID_PST4_MESSAGE_SPEEX_BUFFER = ID_USER_PACKET_ENUM + 4,
+
+		ID_PST4_MESSAGE_HEARTBEAT = ID_USER_PACKET_ENUM + 10
 	};
 
 	//Example of packet : a simple echo
@@ -47,6 +49,13 @@ namespace PST4
 
 		//Payload here
 		char message[256];
+	};
+
+	struct heartbeatPacket
+	{
+		heartbeatPacket() : type{ ID_PST4_MESSAGE_HEARTBEAT } {}
+
+		unsigned char type;
 	};
 #pragma pack(pop)
 }
