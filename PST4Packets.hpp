@@ -71,6 +71,8 @@ namespace PST4
 
 	struct Vect3f
 	{
+		Vect3f() = default;
+		Vect3f(float _x, float _y, float _z) : x{ _x }, y{ _y }, z{ _z } {}
 		float x;
 		float y;
 		float z;
@@ -78,6 +80,8 @@ namespace PST4
 
 	struct Quatf
 	{
+		Quatf() = default;
+		Quatf(float _w, float _x, float _y, float _z) : w{ _w }, x{ _x }, y{ _y }, z{ _z } {}
 		float x;
 		float y;
 		float z;
@@ -99,14 +103,14 @@ namespace PST4
 			absOrient.y = orientation.y;
 			absOrient.z = orientation.z;
 			absOrient.w = orientation.w;
-	}
+		}
 #endif
 
 		unsigned char type;
 		size_t sessionId;
 		Vect3f absPos;
 		Quatf absOrient;
-};
+	};
 
 #pragma pack(pop)
 }
