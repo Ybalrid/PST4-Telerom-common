@@ -68,5 +68,44 @@ namespace PST4
 		size_t clientId;
 	};
 
+	struct Vect3f
+	{
+		float x;
+		float y;
+		float z;
+	};
+
+	struct Quatf
+	{
+		float x;
+		float y;
+		float z;
+		float w;
+	};
+
+	struct headPosePacket
+	{
+		headPosePacket() : type{ ID_PST4_MESSAGE_HEAD_POSE } {};
+
+#ifdef I_AM_CLIENT
+		headPosePacket(size_t sessionId, Annwvyn::AnnVect3 position, Annwvyn::AnnQuaternion orientation) : type{ ID_PST4_MESSAGE_HEAD_POSE }, sessionId{ sessionId }
+		{
+			absPos.x = position.x;
+			absPos.y = position.y;
+			absPos.z = position.z;
+
+			absOrient.x = orientation.x;
+			absOrient.y = orientation.y;
+			absOrient.z = orientation.z;
+			absOrient.w = orientation.w;
+		}
+#endif
+
+		unsigned char type;
+		size_t sessionId;
+		Vect3f absPos;
+		Quatf absOrient;
+	};
+
 #pragma pack(pop)
 }
