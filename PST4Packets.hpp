@@ -1,4 +1,6 @@
 #include <MessageIdentifiers.h>
+#include <cstring>
+#include <string>
 #include <linux_safe.h>
 
 namespace PST4
