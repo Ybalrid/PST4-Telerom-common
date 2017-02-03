@@ -28,6 +28,7 @@ namespace PST4
 		ID_PST4_MESSAGE_HEAD_POSE = ID_USER_PACKET_ENUM + 2,
 		ID_PST4_MESSAGE_HAND_POSE = ID_USER_PACKET_ENUM + 3,
 		ID_PST4_MESSAGE_SPEEX_BUFFER = ID_USER_PACKET_ENUM + 4,
+		ID_PST4_MESSAGE_SESSION_ID = ID_USER_PACKET_ENUM + 5,
 
 		ID_PST4_MESSAGE_HEARTBEAT = ID_USER_PACKET_ENUM + 10
 	};
@@ -59,5 +60,13 @@ namespace PST4
 
 		unsigned char type;
 	};
+
+	struct serverToClientIdPacket
+	{
+		serverToClientIdPacket(size_t id) : type{ ID_PST4_MESSAGE_SESSION_ID }, clientId{ id } {}
+		unsigned char type;
+		size_t clientId;
+	};
+
 #pragma pack(pop)
 }
