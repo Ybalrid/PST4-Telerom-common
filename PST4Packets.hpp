@@ -1,3 +1,4 @@
+#pragma once
 #include <MessageIdentifiers.h>
 #include <cstring>
 #include <string>
@@ -98,14 +99,14 @@ namespace PST4
 			absOrient.y = orientation.y;
 			absOrient.z = orientation.z;
 			absOrient.w = orientation.w;
-		}
+	}
 #endif
 
 		unsigned char type;
 		size_t sessionId;
 		Vect3f absPos;
 		Quatf absOrient;
-	};
+};
 
 #pragma pack(pop)
 }
