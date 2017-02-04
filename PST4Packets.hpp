@@ -80,7 +80,7 @@ namespace PST4
 		//TODO define RakNet messages here
 		ID_PST4_MESSAGE_ECHO = ID_USER_PACKET_ENUM + 1,					//Send a buffer of 255 chars
 		ID_PST4_MESSAGE_HEAD_POSE = ID_USER_PACKET_ENUM + 2,			//Send the pose of the head
-		ID_PST4_MESSAGE_HAND_POSE = ID_USER_PACKET_ENUM + 3,
+		ID_PST4_MESSAGE_HAND_POSE = ID_USER_PACKET_ENUM + 3,			//Send the pose of the hands
 		ID_PST4_MESSAGE_SPEEX_BUFFER = ID_USER_PACKET_ENUM + 4,
 		ID_PST4_MESSAGE_SESSION_ID = ID_USER_PACKET_ENUM + 5,			//Sends the session ID to the assignee client. If server recive this packet from a client, it will resend the client's ID
 		ID_PST5_MESSAGE_NOTIFY_SESSION_END = ID_USER_PACKET_ENUM + 6,	//Tell client that other client session has ended
@@ -133,6 +133,7 @@ namespace PST4
 		Vect3f(float _x, float _y, float _z) : x{ _x }, y{ _y }, z{ _z } {}
 #ifdef I_AM_CLIENT
 		Annwvyn::AnnVect3 getAnnVect3() const { return{ x, y, z }; }
+		Vect3f(const Annwvyn::AnnVect3& v) : x(v.x), y(v.y), z(v.z) {}
 #endif
 		float x;
 		float y;
@@ -146,6 +147,7 @@ namespace PST4
 		Quatf(float _w, float _x, float _y, float _z) : w{ _w }, x{ _x }, y{ _y }, z{ _z } {}
 #ifdef I_AM_CLIENT
 		Annwvyn::AnnQuaternion getAnnQuaternion() const { return{ w, x, y, z }; }
+		Quatf(const Annwvyn::AnnQuaternion& q) : x(q.x), y(q.y), z(q.z), w(q.w) {}
 #endif
 		float x;
 		float y;
@@ -199,6 +201,16 @@ namespace PST4
 		sessionEndedPacket(size_t id) : type{ ID_PST5_MESSAGE_NOTIFY_SESSION_END }, sessionId{ id } {}
 		unsigned char type;
 		size_t sessionId;
+	};
+
+	struct handPosePacket
+	{
+		handPosePacket(bool) : type{ ID_PST4_MESSAGE_HAND_POSE }, hasHands(false){}
+		handPosePacket(Vect3f leftV, Quatf leftQ, Vect3f rightP, Quatf rightQ) : type{ ID_PST4_MESSAGE_HAND_POSE }, leftPos(leftV), rightPos(rightP), leftOrient(leftQ), rightOrient(rightQ){}
+		unsigned char type;
+		bool hasHands;
+		Vect3f leftPos, rightPos;
+		Quatf leftOrient, rightOrient;
 	};
 
 #pragma pack(pop)///undo the configuration change we did earlier. ;-)
