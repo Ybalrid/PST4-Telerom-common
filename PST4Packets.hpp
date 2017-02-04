@@ -103,6 +103,8 @@ namespace PST4
 	struct headPosePacket
 	{
 		headPosePacket() : type{ ID_PST4_MESSAGE_HEAD_POSE } {};
+		headPosePacket(size_t sessionId, Vect3f position, Quatf orientation) : type{ ID_PST4_MESSAGE_HEAD_POSE },
+			sessionId{ sessionId }, absPos{ position }, absOrient{ orientation } {}
 
 #ifdef I_AM_CLIENT
 		headPosePacket(size_t sessionId, Annwvyn::AnnVect3 position, Annwvyn::AnnQuaternion orientation) : type{ ID_PST4_MESSAGE_HEAD_POSE }, sessionId{ sessionId }
