@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <MessageIdentifiers.h>
 #include <cstring>
 #include <string>
