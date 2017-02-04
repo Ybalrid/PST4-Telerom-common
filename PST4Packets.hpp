@@ -205,10 +205,11 @@ namespace PST4
 
 	struct handPosePacket
 	{
-		handPosePacket(bool) : type{ ID_PST4_MESSAGE_HAND_POSE }, hasHands(false){}
-		handPosePacket(Vect3f leftV, Quatf leftQ, Vect3f rightP, Quatf rightQ) : type{ ID_PST4_MESSAGE_HAND_POSE }, leftPos(leftV), rightPos(rightP), leftOrient(leftQ), rightOrient(rightQ){}
+		handPosePacket(size_t session, bool state) : type{ ID_PST4_MESSAGE_HAND_POSE }, hasHands(state), sessionId(session){}
+		handPosePacket(size_t session, Vect3f leftV, Quatf leftQ, Vect3f rightP, Quatf rightQ) : type{ ID_PST4_MESSAGE_HAND_POSE }, sessionId(session), leftPos(leftV), rightPos(rightP), leftOrient(leftQ), rightOrient(rightQ){}
 		unsigned char type;
 		bool hasHands;
+		size_t sessionId;
 		Vect3f leftPos, rightPos;
 		Quatf leftOrient, rightOrient;
 	};
