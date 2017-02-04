@@ -78,13 +78,14 @@ namespace PST4
 	enum ID_PST4_MESSAGE_TYPE
 	{
 		//TODO define RakNet messages here
-		ID_PST4_MESSAGE_ECHO = ID_USER_PACKET_ENUM + 1,				//Send a buffer of 255 chars
-		ID_PST4_MESSAGE_HEAD_POSE = ID_USER_PACKET_ENUM + 2,		//Send the pose of the head
+		ID_PST4_MESSAGE_ECHO = ID_USER_PACKET_ENUM + 1,					//Send a buffer of 255 chars
+		ID_PST4_MESSAGE_HEAD_POSE = ID_USER_PACKET_ENUM + 2,			//Send the pose of the head
 		ID_PST4_MESSAGE_HAND_POSE = ID_USER_PACKET_ENUM + 3,
 		ID_PST4_MESSAGE_SPEEX_BUFFER = ID_USER_PACKET_ENUM + 4,
-		ID_PST4_MESSAGE_SESSION_ID = ID_USER_PACKET_ENUM + 5,		//Sends the session ID to the assignee client. If the client send this packet, server will send the session id again.
+		ID_PST4_MESSAGE_SESSION_ID = ID_USER_PACKET_ENUM + 5,			//Sends the session ID to the assignee client. If server recive this packet from a client, it will resend the client's ID
+		ID_PST5_MESSAGE_NOTIFY_SESSION_END = ID_USER_PACKET_ENUM + 6,	//Tell client that other client session has ended
 
-		ID_PST4_MESSAGE_HEARTBEAT = ID_USER_PACKET_ENUM + 10		//1byte empty packet. Signal that you are alive.
+		ID_PST4_MESSAGE_HEARTBEAT = ID_USER_PACKET_ENUM + 10			//1byte empty packet. Signal that you are alive.
 	};
 
 #pragma pack(push, 1) //align on 1 byte, instead of 4 by default. Thankfully this also works on GCC -> https://gcc.gnu.org/onlinedocs/gcc-4.4.4/gcc/Structure_002dPacking-Pragmas.html
@@ -191,6 +192,13 @@ namespace PST4
 		size_t sessionId;
 		Vect3f absPos;
 		Quatf absOrient;
+	};
+
+	struct sessionEndedPacket
+	{
+		sessionEndedPacket(size_t id) : type{ ID_PST5_MESSAGE_NOTIFY_SESSION_END }, sessionId{ id } {}
+		unsigned char type;
+		size_t sessionId;
 	};
 
 #pragma pack(pop)///undo the configuration change we did earlier. ;-)
