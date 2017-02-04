@@ -73,6 +73,9 @@ namespace PST4
 	{
 		Vect3f() = default;
 		Vect3f(float _x, float _y, float _z) : x{ _x }, y{ _y }, z{ _z } {}
+#ifdef I_AM_CLIENT
+		Annwvyn::AnnVect3 getAnnVect3() const { return{ x, y, z }; }
+#endif
 		float x;
 		float y;
 		float z;
@@ -82,6 +85,9 @@ namespace PST4
 	{
 		Quatf() = default;
 		Quatf(float _w, float _x, float _y, float _z) : w{ _w }, x{ _x }, y{ _y }, z{ _z } {}
+#ifdef I_AM_CLIENT
+		Annwvyn::AnnQuaternion getAnnQuaternion() const { return{ w, x, y, z }; }
+#endif
 		float x;
 		float y;
 		float z;
@@ -117,14 +123,14 @@ namespace PST4
 			absOrient.y = orientation.y;
 			absOrient.z = orientation.z;
 			absOrient.w = orientation.w;
-	}
+		}
 #endif
 
 		unsigned char type;
 		size_t sessionId;
 		Vect3f absPos;
 		Quatf absOrient;
-};
+	};
 
 #pragma pack(pop)
 }
