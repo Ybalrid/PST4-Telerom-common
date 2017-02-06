@@ -27,7 +27,8 @@ namespace PST4
 		return true;
 	}
 
-	/*Structure of any RakNet packet :
+	/*
+	Structure of any RakNet packet :
 
 	------------------------------------
 	| ID (1 Byte) | Payload (variable) |
@@ -73,8 +74,30 @@ namespace PST4
 	compilers tend to add padding inside structures to make them more "runtime access friendly", aligning the memory in chunks or 4 bytes for example.
 	This would wast 3 bytes between the "type" and "someString" members, making our packet grow. If this was just in ram, this will not be a problem,
 	but we're sending this data over the network, so if we prevent to waste bandwidth...
-
 	*/
+
+	/*
+	Protocol documentation:
+
+	//This is as simple as it can get, and most of the magic is done by the server program, that is less than
+
+	All packet types can been sent from the client to the server and form the server to the client.
+
+	Packet that needs identification contains the sessionID of the user
+
+	1) Client(s) connect to server
+	2) Server send each client it's own "seesionID" in a ID_PST4_MESSAGE_SESSION_ID packet
+	3) If client send a ID_PST4_MISSION_SESSION_ID packet to the server, server will resend the client it's session number
+	4) When client has it's own session ID it will send continuously :
+		- ID_PST4_MESSAGE_HEAD_POSE
+		- ID_PST4_MESSAGE_HAND_POSE
+		- ID_PST4_MESSAGE_VOICE_BUFFER
+	5) When server receive one of the 3 packet above, it will resend it to ALL connected client
+	6) Server will send, with an ACK request, an heartbeat packet every 5 seconds. Sever will keep track of this interval
+	7) At clean session end, ID_PST4_MESSAGE_NOTIFY_SESSION_END is broadcasted by the server
+	8) If server lost connection with a client, it will also broadcast ID_PST4_MESSAGE_NOTIFY_SESSION_END
+	9) Client can send arbitrary text to the server in a ID_PST4_MESSAGE_ECHO packet. This is used for debugging.
+	 */
 
 	enum ID_PST4_MESSAGE_TYPE
 	{
@@ -82,9 +105,9 @@ namespace PST4
 		ID_PST4_MESSAGE_ECHO = ID_USER_PACKET_ENUM + 1,					//Send a buffer of 255 chars
 		ID_PST4_MESSAGE_HEAD_POSE = ID_USER_PACKET_ENUM + 2,			//Send the pose of the head
 		ID_PST4_MESSAGE_HAND_POSE = ID_USER_PACKET_ENUM + 3,			//Send the pose of the hands
-		ID_PST4_MESSAGE_VOICE_BUFFER = ID_USER_PACKET_ENUM + 4,
-		ID_PST4_MESSAGE_SESSION_ID = ID_USER_PACKET_ENUM + 5,			//Sends the session ID to the assignee client. If server recive this packet from a client, it will resend the client's ID
-		ID_PST5_MESSAGE_NOTIFY_SESSION_END = ID_USER_PACKET_ENUM + 6,	//Tell client that other client session has ended
+		ID_PST4_MESSAGE_VOICE_BUFFER = ID_USER_PACKET_ENUM + 4,			//Send a compressed audio buffer
+		ID_PST4_MESSAGE_SESSION_ID = ID_USER_PACKET_ENUM + 5,			//Sends the session ID to the assignee client. Or client request to resend sessionID
+		ID_PST4_MESSAGE_NOTIFY_SESSION_END = ID_USER_PACKET_ENUM + 6,	//Tell client that other client session has ended
 
 		ID_PST4_MESSAGE_HEARTBEAT = ID_USER_PACKET_ENUM + 10			//1byte empty packet. Signal that you are alive.
 	};
@@ -199,7 +222,7 @@ namespace PST4
 
 	struct sessionEndedPacket
 	{
-		sessionEndedPacket(size_t id) : type{ ID_PST5_MESSAGE_NOTIFY_SESSION_END }, sessionId{ id } {}
+		sessionEndedPacket(size_t id) : type{ ID_PST4_MESSAGE_NOTIFY_SESSION_END }, sessionId{ id } {}
 		unsigned char type;
 		size_t sessionId;
 	};
