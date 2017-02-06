@@ -10,7 +10,7 @@
 #include <string>
 //Hand coded "safe" functions for GNU/Linux
 #include <linux_safe.h>
-#include <ws2def.h>
+//#include <ws2def.h>
 
 //This can be defined by the includer. Add Annwvyn types translation
 #ifdef I_AM_CLIENT
