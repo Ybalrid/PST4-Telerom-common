@@ -10,6 +10,7 @@
 #include <string>
 //Hand coded "safe" functions for GNU/Linux
 #include <linux_safe.h>
+#include <ws2def.h>
 
 //This can be defined by the includer. Add Annwvyn types translation
 #ifdef I_AM_CLIENT
@@ -81,7 +82,7 @@ namespace PST4
 		ID_PST4_MESSAGE_ECHO = ID_USER_PACKET_ENUM + 1,					//Send a buffer of 255 chars
 		ID_PST4_MESSAGE_HEAD_POSE = ID_USER_PACKET_ENUM + 2,			//Send the pose of the head
 		ID_PST4_MESSAGE_HAND_POSE = ID_USER_PACKET_ENUM + 3,			//Send the pose of the hands
-		ID_PST4_MESSAGE_SPEEX_BUFFER = ID_USER_PACKET_ENUM + 4,
+		ID_PST4_MESSAGE_VOICE_BUFFER = ID_USER_PACKET_ENUM + 4,
 		ID_PST4_MESSAGE_SESSION_ID = ID_USER_PACKET_ENUM + 5,			//Sends the session ID to the assignee client. If server recive this packet from a client, it will resend the client's ID
 		ID_PST5_MESSAGE_NOTIFY_SESSION_END = ID_USER_PACKET_ENUM + 6,	//Tell client that other client session has ended
 
@@ -212,6 +213,20 @@ namespace PST4
 		size_t sessionId;
 		Vect3f leftPos, rightPos;
 		Quatf leftOrient, rightOrient;
+	};
+
+	//4 frames
+	struct voicePacket
+	{
+		voicePacket(size_t session) : type{ ID_PST4_MESSAGE_VOICE_BUFFER }, sessionId{ session }
+		{
+			dataLen = 0;
+		}
+		unsigned char type;
+		size_t sessionId;
+		unsigned char frameSizes[4]; //I expect {38, 38, 38, 38}
+		unsigned char dataLen; //MAX 255
+		unsigned char data[256]; //WILL BE TRUNCATED!!!
 	};
 
 #pragma pack(pop)///undo the configuration change we did earlier. ;-)
