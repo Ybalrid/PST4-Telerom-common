@@ -196,7 +196,7 @@ namespace PST4
 	///Pose of the head of an user
 	struct headPosePacket
 	{
-		headPosePacket() : type{ ID_PST4_MESSAGE_HEAD_POSE } {};
+		headPosePacket() : type{ ID_PST4_MESSAGE_HEAD_POSE }, sessionId{ 0 } {};
 		headPosePacket(size_t sessionId, Vect3f position, Quatf orientation) : type{ ID_PST4_MESSAGE_HEAD_POSE },
 			sessionId{ sessionId }, absPos{ position }, absOrient{ orientation } {}
 
@@ -230,7 +230,9 @@ namespace PST4
 	struct handPosePacket
 	{
 		handPosePacket(size_t session, bool state) : type{ ID_PST4_MESSAGE_HAND_POSE }, hasHands(state), sessionId(session){}
-		handPosePacket(size_t session, Vect3f leftV, Quatf leftQ, Vect3f rightP, Quatf rightQ) : type{ ID_PST4_MESSAGE_HAND_POSE }, sessionId(session), leftPos(leftV), rightPos(rightP), leftOrient(leftQ), rightOrient(rightQ){}
+		handPosePacket(size_t session, Vect3f leftV, Quatf leftQ, Vect3f rightP, Quatf rightQ) : type{ ID_PST4_MESSAGE_HAND_POSE }, hasHands(true), sessionId(session), leftPos(leftV), rightPos(rightP), leftOrient(leftQ), rightOrient(rightQ)
+		{}
+
 		unsigned char type;
 		bool hasHands;
 		size_t sessionId;
