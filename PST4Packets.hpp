@@ -226,7 +226,7 @@ namespace PST4
 		size_t sessionId;
 		unsigned char frameSizes[4]; //I expect {38, 38, 38, 38}
 		unsigned char dataLen; //MAX 255
-		unsigned char data[256]; //WILL BE TRUNCATED!!!
+		unsigned char data[38 * 4]; //WILL BE TRUNCATED!!!
 	};
 
 #pragma pack(pop)///undo the configuration change we did earlier. ;-)
