@@ -11,6 +11,8 @@
 //Hand coded "safe" functions for GNU/Linux
 #include <linux_safe.h>
 //#include <ws2def.h>
+#include <stdexcept>
+#include <exception>
 
 //This can be defined by the includer. Add Annwvyn types translation
 #ifdef I_AM_CLIENT
@@ -108,6 +110,7 @@ namespace PST4
 		ID_PST4_MESSAGE_VOICE_BUFFER = ID_USER_PACKET_ENUM + 4,			//Send a compressed audio buffer
 		ID_PST4_MESSAGE_SESSION_ID = ID_USER_PACKET_ENUM + 5,			//Sends the session ID to the assignee client. Or client request to resend sessionID
 		ID_PST4_MESSAGE_NOTIFY_SESSION_END = ID_USER_PACKET_ENUM + 6,	//Tell client that other client session has ended
+		ID_PST4_MESSAGE_DYNAMIC_SCENE_OBJECT = ID_USER_PACKET_ENUM + 7, //Tell that an object exist in the scene
 
 		ID_PST4_MESSAGE_HEARTBEAT = ID_USER_PACKET_ENUM + 10			//1byte empty packet. Signal that you are alive.
 	};
@@ -241,6 +244,7 @@ namespace PST4
 	};
 
 	//4 frames
+	//This packet is actually sent as a bitstream and that stuct is not used
 	struct voicePacket
 	{
 		voicePacket(size_t session) : type{ ID_PST4_MESSAGE_VOICE_BUFFER }, sessionId{ session }
@@ -252,6 +256,27 @@ namespace PST4
 		unsigned char frameSizes[4]; //I expect {38, 38, 38, 38}
 		unsigned char dataLen; //MAX 255
 		unsigned char data[38 * 4]; //WILL BE TRUNCATED!!!
+	};
+
+	struct dynamicSceneObjectPacket
+	{
+		dynamicSceneObjectPacket(const std::string& mesh, const std::string& id) :
+			type(ID_PST4_MESSAGE_DYNAMIC_SCENE_OBJECT)
+		{
+			if (mesh.length() > 255)
+				secure_strcpy(meshname, sizeof meshname, mesh.c_str());
+			else
+				throw std::runtime_error("Mesh name too long");
+
+			if (id.length() > 255)
+				secure_strcpy(idstring, sizeof idstring, id.c_str());
+			else
+				throw std::runtime_error("ID name too long");
+		}
+
+		unsigned char type;
+		char meshname[256];
+		char idstring[256];
 	};
 
 #pragma pack(pop)///undo the configuration change we did earlier. ;-)
