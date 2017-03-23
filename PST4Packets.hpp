@@ -192,7 +192,7 @@ namespace PST4
 	///Operator overload to write a Quatf to an output stream
 	static std::ostream& operator<<(std::ostream& stream, const Quatf& quat)
 	{
-		stream << "Quatf(" << quat.w << ", " << quat.w << ", " << quat.y << ", " << quat.x << ")";
+		stream << "Quatf(" << quat.w << ", " << quat.x << ", " << quat.y << ", " << quat.z << ")";
 		return stream;
 	}
 
@@ -206,14 +206,8 @@ namespace PST4
 #ifdef I_AM_CLIENT
 		headPosePacket(size_t sessionId, Annwvyn::AnnVect3 position, Annwvyn::AnnQuaternion orientation) : type{ ID_PST4_MESSAGE_HEAD_POSE }, sessionId{ sessionId }
 		{
-			absPos.x = position.x;
-			absPos.y = position.y;
-			absPos.z = position.z;
-
-			absOrient.x = orientation.x;
-			absOrient.y = orientation.y;
-			absOrient.z = orientation.z;
-			absOrient.w = orientation.w;
+			absPos = position;
+			absOrient = orientation;
 		}
 #endif
 
@@ -233,11 +227,12 @@ namespace PST4
 	struct handPosePacket
 	{
 		handPosePacket(size_t session, bool state) : type{ ID_PST4_MESSAGE_HAND_POSE }, hasHands(state), sessionId(session){}
-		handPosePacket(size_t session, Vect3f leftV, Quatf leftQ, Vect3f rightP, Quatf rightQ) : type{ ID_PST4_MESSAGE_HAND_POSE }, hasHands(true), sessionId(session), leftPos(leftV), rightPos(rightP), leftOrient(leftQ), rightOrient(rightQ)
+		handPosePacket(size_t session, Vect3f leftV, Quatf leftQ, Vect3f rightP, Quatf rightQ) : type{ ID_PST4_MESSAGE_HAND_POSE },
+			hasHands(true), sessionId(session), leftPos(leftV), rightPos(rightP), leftOrient(leftQ), rightOrient(rightQ)
 		{}
 
 		unsigned char type;
-		bool hasHands;
+		bool hasHands; //if false, the user don't have tracked hands
 		size_t sessionId;
 		Vect3f leftPos, rightPos;
 		Quatf leftOrient, rightOrient;
