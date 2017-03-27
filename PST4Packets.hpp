@@ -270,7 +270,7 @@ namespace PST4
 
 		void setId(const std::string& id)
 		{
-			if (id.length() > 255)
+			if (id.length() < 255)
 				secure_strcpy(idstring, sizeof idstring, id.c_str());
 			else
 				throw std::runtime_error("ID name too long");
