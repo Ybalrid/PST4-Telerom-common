@@ -278,7 +278,7 @@ namespace PST4
 
 		bool isOwned()
 		{
-			return owner == 0;
+			return owner != 0;
 		}
 
 		void setOwner(const size_t& id)
