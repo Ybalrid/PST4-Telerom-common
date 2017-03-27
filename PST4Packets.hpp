@@ -255,14 +255,21 @@ namespace PST4
 
 	struct dynamicSceneObjectPacket
 	{
-		dynamicSceneObjectPacket(const std::string& mesh, const std::string& id) :
+		dynamicSceneObjectPacket(const std::string& id) :
 			type(ID_PST4_MESSAGE_DYNAMIC_SCENE_OBJECT)
 		{
-			if (mesh.length() > 255)
-				secure_strcpy(meshname, sizeof meshname, mesh.c_str());
-			else
-				throw std::runtime_error("Mesh name too long");
+			setId(id);
+		}
 
+		dynamicSceneObjectPacket(const std::string& id, const Vect3f& pos, const Vect3f& s, const Quatf orient) :
+			type(ID_PST4_MESSAGE_DYNAMIC_SCENE_OBJECT),
+			position{pos}, scale{s}, orientation{orient}
+		{
+			setId(id);
+		}
+
+		void setId(const std::string& id)
+		{
 			if (id.length() > 255)
 				secure_strcpy(idstring, sizeof idstring, id.c_str());
 			else
@@ -270,8 +277,9 @@ namespace PST4
 		}
 
 		unsigned char type;
-		char meshname[256];
 		char idstring[256];
+		Vect3f position, scale;
+		Quatf orientation;
 	};
 
 #pragma pack(pop)///undo the configuration change we did earlier. ;-)
