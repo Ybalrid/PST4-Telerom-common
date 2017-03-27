@@ -288,7 +288,7 @@ namespace PST4
 
 		unsigned char type;
 		char idstring[256];
-		size_t owner;
+		size_t owner, sender;
 		Vect3f position, scale;
 		Quatf orientation;
 	};
