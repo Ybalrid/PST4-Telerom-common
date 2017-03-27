@@ -256,18 +256,18 @@ namespace PST4
 	struct dynamicSceneObjectPacket
 	{
 		dynamicSceneObjectPacket(const std::string& id) :
-			type(ID_PST4_MESSAGE_DYNAMIC_SCENE_OBJECT)
+			type(ID_PST4_MESSAGE_DYNAMIC_SCENE_OBJECT), owner{0}
 		{
 			setId(id);
 		}
 
 		dynamicSceneObjectPacket(const std::string& id, const Vect3f& pos, const Vect3f& s, const Quatf orient) :
 			type(ID_PST4_MESSAGE_DYNAMIC_SCENE_OBJECT),
-			position{pos}, scale{s}, orientation{orient}
+			position{pos}, scale{s}, orientation{orient}, owner{0}
 		{
 			setId(id);
 		}
-
+		
 		void setId(const std::string& id)
 		{
 			if (id.length() < 255)
@@ -276,8 +276,19 @@ namespace PST4
 				throw std::runtime_error("ID name too long");
 		}
 
+		bool isOwned()
+		{
+			return owner == 0;
+		}
+
+		void setOwner(const size_t& id)
+		{
+			owner = id;
+		}
+
 		unsigned char type;
 		char idstring[256];
+		size_t owner;
 		Vect3f position, scale;
 		Quatf orientation;
 	};
